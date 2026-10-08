@@ -6,7 +6,7 @@
 >
 > **不需要任何 API Key 也能完整跑通全链路。**
 
-![CI](https://github.com/your-username/rag-doc-qa/actions/workflows/ci.yml/badge.svg)
+![CI](https://github.com/SaltinAnon/rag-doc-qa/actions/workflows/ci.yml/badge.svg)
 
 ![Python](https://img.shields.io/badge/python-3.11%20%7C%203.12-blue)
 
@@ -382,9 +382,12 @@ curl -X POST http://localhost:8000/api/v1/query \
 }
 ```
 
-> 为什么要单独做 `refused` 字段：早期版本让调用方去 `answer` 里匹配「无法回答」>   
-> 这几个字来判断是否拒答 —— 文案改一个字判断就失灵，「拒答准确率」这个指标>   
-> 也就不再可信。现在链路里判定一次，作为字段一路传出去。>   
+> 为什么要单独做 `refused` 字段：早期版本让调用方去 `answer` 里匹配「无法回答」
+>   
+> 这几个字来判断是否拒答 —— 文案改一个字判断就失灵，「拒答准确率」这个指标
+>   
+> 也就不再可信。现在链路里判定一次，作为字段一路传出去。
+>   
 > `refusal_reason` 取值：`no_retrieval`（检索为空）/ `model_refused`（模型或离线闸门
 
 
