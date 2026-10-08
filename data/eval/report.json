@@ -1,0 +1,808 @@
+{
+  "metrics": {
+    "total_cases": 27,
+    "answerable_cases": 24,
+    "refusal_cases": 3,
+    "recall_at_k": 1.0,
+    "precision_at_k": 0.7166666666666667,
+    "mrr": 1.0,
+    "answer_hit_at_k": 0.9583333333333334,
+    "answer_mrr": 0.9375,
+    "citation_accuracy": 0.9583333333333334,
+    "keyword_hit_rate": 0.8333333333333334,
+    "refusal_accuracy": 1.0,
+    "avg_latency_ms": 49.370370370370374,
+    "errors": 0,
+    "k": 5,
+    "mode": "full",
+    "embedding": "offline-hash(dim=512)",
+    "llm": "offline-extractive"
+  },
+  "cases": [
+    {
+      "question": "员工入职满一年后每年有多少天年假？",
+      "gold_source": "员工手册.md",
+      "expect_refusal": false,
+      "retrieved_sources": [
+        "员工手册.md",
+        "员工手册.md",
+        "员工手册.md",
+        "员工手册.md",
+        "员工手册.md"
+      ],
+      "hit_rank": 1,
+      "recall_at_k": true,
+      "precision_at_k": 1.0,
+      "reciprocal_rank": 1.0,
+      "answer_chunk_rank": 1,
+      "answer_hit_at_k": true,
+      "answer_rr": 1.0,
+      "answer": "（离线抽取模式·未调用大模型）\n- 第八条 年假。员工入职满一年后开始享受带薪年休假。[1]\n- 工龄一年以上不满十年的,每年享有 5 天年假;[1]\n- 第二十一条 公司提供年度体检,标准为每人每年 1200 元,入职满一年的员工可享受。[2]",
+      "citation_sources": [
+        "员工手册.md",
+        "员工手册.md"
+      ],
+      "citation_hit": true,
+      "keyword_hit": true,
+      "refused": false,
+      "latency_ms": 118,
+      "error": ""
+    },
+    {
+      "question": "员工年假有多少天？",
+      "gold_source": "员工手册.md",
+      "expect_refusal": false,
+      "retrieved_sources": [
+        "员工手册.md",
+        "产品FAQ.md",
+        "员工手册.md",
+        "员工手册.md",
+        "员工手册.md"
+      ],
+      "hit_rank": 1,
+      "recall_at_k": true,
+      "precision_at_k": 0.8,
+      "reciprocal_rank": 1.0,
+      "answer_chunk_rank": 1,
+      "answer_hit_at_k": true,
+      "answer_rr": 1.0,
+      "answer": "（离线抽取模式·未调用大模型）\n- 第八条 年假。员工入职满一年后开始享受带薪年休假。[1]\n- 工龄一年以上不满十年的,每年享有 5 天年假;[1]",
+      "citation_sources": [
+        "员工手册.md"
+      ],
+      "citation_hit": true,
+      "keyword_hit": true,
+      "refused": false,
+      "latency_ms": 46,
+      "error": ""
+    },
+    {
+      "question": "工龄二十年以上的员工年假是多少天？",
+      "gold_source": "员工手册.md",
+      "expect_refusal": false,
+      "retrieved_sources": [
+        "员工手册.md",
+        "员工手册.md",
+        "员工手册.md",
+        "信息安全规范.docx",
+        "员工手册.md"
+      ],
+      "hit_rank": 1,
+      "recall_at_k": true,
+      "precision_at_k": 0.8,
+      "reciprocal_rank": 1.0,
+      "answer_chunk_rank": 1,
+      "answer_hit_at_k": true,
+      "answer_rr": 1.0,
+      "answer": "（离线抽取模式·未调用大模型）\n- 工龄一年以上不满十年的,每年享有 5 天年假;[1]\n- 工龄十年以上不满二十年的,每年享有 10 天年假;[1]\n- 第二十一条 公司提供年度体检,标准为每人每年 1200 元,入职满一年的员工可享受。[2]",
+      "citation_sources": [
+        "员工手册.md",
+        "员工手册.md"
+      ],
+      "citation_hit": true,
+      "keyword_hit": false,
+      "refused": false,
+      "latency_ms": 48,
+      "error": ""
+    },
+    {
+      "question": "忘记打卡每月最多可以补几次？",
+      "gold_source": "员工手册.md",
+      "expect_refusal": false,
+      "retrieved_sources": [
+        "员工手册.md",
+        "员工手册.md",
+        "差旅与费用报销制度.md",
+        "产品FAQ.md",
+        "员工手册.md"
+      ],
+      "hit_rank": 1,
+      "recall_at_k": true,
+      "precision_at_k": 0.6,
+      "reciprocal_rank": 1.0,
+      "answer_chunk_rank": 1,
+      "answer_hit_at_k": true,
+      "answer_rr": 1.0,
+      "answer": "（离线抽取模式·未调用大模型）\n- 第五条 公司实行弹性上班制度,员工可在上午 9:00 至 10:30 之间任一时刻打卡上班,。[1]\n- 第七条 员工忘记打卡的,应在当日内通过办公系统提交补卡申请,每月补卡次数不得超过 5 次,。[1]\n- 最多可结转 5 天至次年第一季度使用,逾期作废。[2]\n- |---|---|---|---|| 社区版 | 免费 | 个人开发者 | 单机部署,最多 5 个数据源 |。[4]",
+      "citation_sources": [
+        "员工手册.md",
+        "员工手册.md",
+        "产品FAQ.md"
+      ],
+      "citation_hit": true,
+      "keyword_hit": true,
+      "refused": false,
+      "latency_ms": 53,
+      "error": ""
+    },
+    {
+      "question": "员工试用期是多久，薪酬怎么算？",
+      "gold_source": "员工手册.md",
+      "expect_refusal": false,
+      "retrieved_sources": [
+        "员工手册.md",
+        "员工手册.md",
+        "差旅与费用报销制度.md",
+        "产品FAQ.md",
+        "员工手册.md"
+      ],
+      "hit_rank": 1,
+      "recall_at_k": true,
+      "precision_at_k": 0.6,
+      "reciprocal_rank": 1.0,
+      "answer_chunk_rank": 1,
+      "answer_hit_at_k": true,
+      "answer_rr": 1.0,
+      "answer": "（离线抽取模式·未调用大模型）\n- 第二十三条 新员工试用期为 3 个月,特殊岗位经批准可延长至 6 个月。[1]\n- 第二十四条 试用期薪酬为转正后薪酬的 80%,且不低于当地最低工资标准。[1]\n- 试用期结束后数据保留 60 天,逾期未付费将自动清理。[4]",
+      "citation_sources": [
+        "员工手册.md",
+        "产品FAQ.md"
+      ],
+      "citation_hit": true,
+      "keyword_hit": true,
+      "refused": false,
+      "latency_ms": 49,
+      "error": ""
+    },
+    {
+      "question": "住房公积金缴存比例是多少？",
+      "gold_source": "员工手册.md",
+      "expect_refusal": false,
+      "retrieved_sources": [
+        "员工手册.md",
+        "差旅与费用报销制度.md",
+        "产品FAQ.md",
+        "技术架构说明.md",
+        "产品FAQ.md"
+      ],
+      "hit_rank": 1,
+      "recall_at_k": true,
+      "precision_at_k": 0.2,
+      "reciprocal_rank": 1.0,
+      "answer_chunk_rank": 1,
+      "answer_hit_at_k": true,
+      "answer_rr": 1.0,
+      "answer": "（离线抽取模式·未调用大模型）\n- 第十八条 公司实行月薪制,每月 10 日发放上一个自然月的工资。[1]\n- 第十九条 员工每年享有一次调薪机会,调薪窗口为每年 4 月,生效日期为 4 月 1 日。[1]\n- **A:预计费用超过 5000 元的可申请预借,比例不超过预计总额的 70%,。[2]",
+      "citation_sources": [
+        "员工手册.md",
+        "差旅与费用报销制度.md"
+      ],
+      "citation_hit": true,
+      "keyword_hit": false,
+      "refused": false,
+      "latency_ms": 52,
+      "error": ""
+    },
+    {
+      "question": "出差住宿在北京每晚的报销上限是多少？",
+      "gold_source": "差旅与费用报销制度.md",
+      "expect_refusal": false,
+      "retrieved_sources": [
+        "差旅与费用报销制度.md",
+        "差旅与费用报销制度.md",
+        "差旅与费用报销制度.md",
+        "差旅与费用报销制度.md",
+        "差旅与费用报销制度.md"
+      ],
+      "hit_rank": 1,
+      "recall_at_k": true,
+      "precision_at_k": 1.0,
+      "reciprocal_rank": 1.0,
+      "answer_chunk_rank": 1,
+      "answer_hit_at_k": true,
+      "answer_rr": 1.0,
+      "answer": "（离线抽取模式·未调用大模型）\n- - 一线城市(北京、上海、广州、深圳):每晚不超过 600 元。[1]\n- - 新一线城市(杭州、成都、武汉、南京、西安等):每晚不超过 450 元。[1]\n- ### 10.2 国际交通与住宿。[2]",
+      "citation_sources": [
+        "差旅与费用报销制度.md",
+        "差旅与费用报销制度.md"
+      ],
+      "citation_hit": true,
+      "keyword_hit": true,
+      "refused": false,
+      "latency_ms": 46,
+      "error": ""
+    },
+    {
+      "question": "出差餐补每天多少钱？",
+      "gold_source": "差旅与费用报销制度.md",
+      "expect_refusal": false,
+      "retrieved_sources": [
+        "差旅与费用报销制度.md",
+        "差旅与费用报销制度.md",
+        "差旅与费用报销制度.md",
+        "差旅与费用报销制度.md",
+        "差旅与费用报销制度.md"
+      ],
+      "hit_rank": 1,
+      "recall_at_k": true,
+      "precision_at_k": 1.0,
+      "reciprocal_rank": 1.0,
+      "answer_chunk_rank": 1,
+      "answer_hit_at_k": true,
+      "answer_rr": 1.0,
+      "answer": "（离线抽取模式·未调用大模型）\n- 出差期间按每人每天 120 元的标准发放餐补,无需提供发票。[1]\n- 出差超过 7 天的,第 8 天起餐补标准调整为每人每天 150 元。[1]\n- 出差期间按每人每天 120 元的标准发放餐补,无需提供发票。[2]\n- 出差超过 7 天的,第 8 天起餐补标准调整为每人每天 150 元。[2]",
+      "citation_sources": [
+        "差旅与费用报销制度.md",
+        "差旅与费用报销制度.md"
+      ],
+      "citation_hit": true,
+      "keyword_hit": true,
+      "refused": false,
+      "latency_ms": 40,
+      "error": ""
+    },
+    {
+      "question": "费用发生后多久内必须提交报销？",
+      "gold_source": "差旅与费用报销制度.md",
+      "expect_refusal": false,
+      "retrieved_sources": [
+        "差旅与费用报销制度.md",
+        "差旅与费用报销制度.md",
+        "差旅与费用报销制度.md",
+        "差旅与费用报销制度.md",
+        "员工手册.md"
+      ],
+      "hit_rank": 1,
+      "recall_at_k": true,
+      "precision_at_k": 0.8,
+      "reciprocal_rank": 1.0,
+      "answer_chunk_rank": 1,
+      "answer_hit_at_k": true,
+      "answer_rr": 1.0,
+      "answer": "（离线抽取模式·未调用大模型）\n- 1. 业务招待须提前申请,注明招待对象、人数、事由与预算。[1]\n- 4. 报销时须提供发票、消费明细及《业务招待申请单》。[1]\n- 4. 未事先审批的差旅费用,公司有权不予报销。[2]",
+      "citation_sources": [
+        "差旅与费用报销制度.md",
+        "差旅与费用报销制度.md"
+      ],
+      "citation_hit": true,
+      "keyword_hit": false,
+      "refused": false,
+      "latency_ms": 53,
+      "error": ""
+    },
+    {
+      "question": "业务招待费人均标准是多少？",
+      "gold_source": "差旅与费用报销制度.md",
+      "expect_refusal": false,
+      "retrieved_sources": [
+        "差旅与费用报销制度.md",
+        "差旅与费用报销制度.md",
+        "差旅与费用报销制度.md",
+        "产品FAQ.md",
+        "产品FAQ.md"
+      ],
+      "hit_rank": 1,
+      "recall_at_k": true,
+      "precision_at_k": 0.6,
+      "reciprocal_rank": 1.0,
+      "answer_chunk_rank": 1,
+      "answer_hit_at_k": true,
+      "answer_rr": 1.0,
+      "answer": "（离线抽取模式·未调用大模型）\n- 1. 业务招待须提前申请,注明招待对象、人数、事由与预算。[1]\n- 2. 单次招待费用标准:人均不超过 300 元。[1]",
+      "citation_sources": [
+        "差旅与费用报销制度.md"
+      ],
+      "citation_hit": true,
+      "keyword_hit": true,
+      "refused": false,
+      "latency_ms": 43,
+      "error": ""
+    },
+    {
+      "question": "自驾出差的油费补贴标准是多少？",
+      "gold_source": "差旅与费用报销制度.md",
+      "expect_refusal": false,
+      "retrieved_sources": [
+        "差旅与费用报销制度.md",
+        "差旅与费用报销制度.md",
+        "差旅与费用报销制度.md",
+        "差旅与费用报销制度.md",
+        "差旅与费用报销制度.md"
+      ],
+      "hit_rank": 1,
+      "recall_at_k": true,
+      "precision_at_k": 1.0,
+      "reciprocal_rank": 1.0,
+      "answer_chunk_rank": 1,
+      "answer_hit_at_k": true,
+      "answer_rr": 1.0,
+      "answer": "（离线抽取模式·未调用大模型）\n- 自驾出行的,按每公里 1.2 元补贴油费与车辆损耗,过路费、停车费据实报销。[1]\n- 境外出差期间每日补贴标准为 500 元,无需提供发票。[2]\n- 出差超过 14 天的,第 15 天起每日补贴调整为 650 元。[2]\n- 出差期间按每人每天 120 元的标准发放餐补,无需提供发票。[3]",
+      "citation_sources": [
+        "差旅与费用报销制度.md",
+        "差旅与费用报销制度.md",
+        "差旅与费用报销制度.md"
+      ],
+      "citation_hit": true,
+      "keyword_hit": true,
+      "refused": false,
+      "latency_ms": 53,
+      "error": ""
+    },
+    {
+      "question": "专业版的年费是多少？",
+      "gold_source": "产品FAQ.md",
+      "expect_refusal": false,
+      "retrieved_sources": [
+        "产品FAQ.md",
+        "产品FAQ.md",
+        "产品FAQ.md",
+        "员工手册.md",
+        "产品FAQ.md"
+      ],
+      "hit_rank": 1,
+      "recall_at_k": true,
+      "precision_at_k": 0.8,
+      "reciprocal_rank": 1.0,
+      "answer_chunk_rank": 2,
+      "answer_hit_at_k": true,
+      "answer_rr": 0.5,
+      "answer": "（离线抽取模式·未调用大模型）\n- **A:SaaS 标准版支持 50 并发,专业版 200 并发,企业版可按需扩容。[1]\n- 专业版为每日 10 万次;[1]\n- | 专业版 | 每年 88000 元 | 50 人以下团队 | 不限数据源,含智能问答模块 |。[2]\n- 专业版及以上提供基于 RAG 架构的智能问答:。[3]",
+      "citation_sources": [
+        "产品FAQ.md",
+        "产品FAQ.md",
+        "产品FAQ.md"
+      ],
+      "citation_hit": true,
+      "keyword_hit": true,
+      "refused": false,
+      "latency_ms": 44,
+      "error": ""
+    },
+    {
+      "question": "新用户试用期多长，可以试用几次？",
+      "gold_source": "产品FAQ.md",
+      "expect_refusal": false,
+      "retrieved_sources": [
+        "产品FAQ.md",
+        "员工手册.md",
+        "产品FAQ.md",
+        "产品FAQ.md",
+        "产品FAQ.md"
+      ],
+      "hit_rank": 1,
+      "recall_at_k": true,
+      "precision_at_k": 0.8,
+      "reciprocal_rank": 1.0,
+      "answer_chunk_rank": 1,
+      "answer_hit_at_k": true,
+      "answer_rr": 1.0,
+      "answer": "（离线抽取模式·未调用大模型）\n- ## 三、试用政策新用户可申请 30 天全功能试用,无需绑定支付方式。[1]\n- 试用期结束后数据保留 60 天,逾期未付费将自动清理。[1]\n- 第二十三条 新员工试用期为 3 个月,特殊岗位经批准可延长至 6 个月。[2]\n- 第二十四条 试用期薪酬为转正后薪酬的 80%,且不低于当地最低工资标准。[2]",
+      "citation_sources": [
+        "产品FAQ.md",
+        "员工手册.md"
+      ],
+      "citation_hit": true,
+      "keyword_hit": true,
+      "refused": false,
+      "latency_ms": 46,
+      "error": ""
+    },
+    {
+      "question": "私有化部署的最低服务器配置要求是什么？",
+      "gold_source": "产品FAQ.md",
+      "expect_refusal": false,
+      "retrieved_sources": [
+        "产品FAQ.md",
+        "产品FAQ.md",
+        "产品FAQ.md",
+        "技术架构说明.md",
+        "产品FAQ.md"
+      ],
+      "hit_rank": 1,
+      "recall_at_k": true,
+      "precision_at_k": 0.8,
+      "reciprocal_rank": 1.0,
+      "answer_chunk_rank": 1,
+      "answer_hit_at_k": true,
+      "answer_rr": 1.0,
+      "answer": "（离线抽取模式·未调用大模型）\n- 2. **私有化部署**:部署在客户自有服务器或专有云,支持信创环境。[1]\n- 最低配置要求:8 核 CPU、32GB 内存、500GB SSD。[1]\n- **Q:私有化部署支持容器化吗?[2]",
+      "citation_sources": [
+        "产品FAQ.md",
+        "产品FAQ.md"
+      ],
+      "citation_hit": true,
+      "keyword_hit": true,
+      "refused": false,
+      "latency_ms": 43,
+      "error": ""
+    },
+    {
+      "question": "平台的 SLA 承诺可用性是多少？",
+      "gold_source": "产品FAQ.md",
+      "expect_refusal": false,
+      "retrieved_sources": [
+        "产品FAQ.md",
+        "产品FAQ.md",
+        "技术架构说明.md",
+        "星云平台介绍.pdf",
+        "星云平台介绍.pdf"
+      ],
+      "hit_rank": 1,
+      "recall_at_k": true,
+      "precision_at_k": 0.4,
+      "reciprocal_rank": 1.0,
+      "answer_chunk_rank": 1,
+      "answer_hit_at_k": true,
+      "answer_rr": 1.0,
+      "answer": "（离线抽取模式·未调用大模型）\n- SaaS 模式承诺月度可用性 99.9%,未达标的按当月费用的 10% 逐档赔偿,。[1]\n- 离线任务每日 0:30 启动,SLA 为 6 小时内完成。[3]\n- 离线任务每日 0:30 启动,SLA 为 6 小时内完成。[4]\n- 1. 所有无状态服务至少 3 副本,跨可用区部署。[5]",
+      "citation_sources": [
+        "产品FAQ.md",
+        "技术架构说明.md",
+        "星云平台介绍.pdf",
+        "星云平台介绍.pdf"
+      ],
+      "citation_hit": true,
+      "keyword_hit": true,
+      "refused": false,
+      "latency_ms": 43,
+      "error": ""
+    },
+    {
+      "question": "智能问答模块支持多轮对话吗，记忆保留几轮？",
+      "gold_source": "产品FAQ.md",
+      "expect_refusal": false,
+      "retrieved_sources": [
+        "产品FAQ.md",
+        "产品FAQ.md",
+        "产品FAQ.md",
+        "星云平台介绍.pdf",
+        "星云平台介绍.pdf"
+      ],
+      "hit_rank": 1,
+      "recall_at_k": true,
+      "precision_at_k": 0.6,
+      "reciprocal_rank": 1.0,
+      "answer_chunk_rank": 1,
+      "answer_hit_at_k": true,
+      "answer_rr": 1.0,
+      "answer": "（离线抽取模式·未调用大模型）\n- 专业版及以上提供基于 RAG 架构的智能问答:。[1]\n- - 支持多轮追问,上下文记忆默认保留 10 轮;[1]\n- | 专业版 | 每年 88000 元 | 50 人以下团队 | 不限数据源,含智能问答模块 |。[2]\n- 6. **rag-service**:智能问答服务,实现文档检索与生成。[4]",
+      "citation_sources": [
+        "产品FAQ.md",
+        "产品FAQ.md",
+        "星云平台介绍.pdf"
+      ],
+      "citation_hit": true,
+      "keyword_hit": true,
+      "refused": false,
+      "latency_ms": 44,
+      "error": ""
+    },
+    {
+      "question": "RAG 服务里 chunk 的大小和重叠分别是多少？",
+      "gold_source": "技术架构说明.md",
+      "expect_refusal": false,
+      "retrieved_sources": [
+        "星云平台介绍.pdf",
+        "星云平台介绍.pdf",
+        "产品FAQ.md",
+        "员工手册.md",
+        "产品FAQ.md"
+      ],
+      "hit_rank": 1,
+      "recall_at_k": true,
+      "precision_at_k": 0.4,
+      "reciprocal_rank": 1.0,
+      "answer_chunk_rank": 1,
+      "answer_hit_at_k": true,
+      "answer_rr": 1.0,
+      "answer": "（离线抽取模式·未调用大模型）\n- 二、技术选型三、RAG 服务详细设计。[1]\n- 2. **切分策略**:采用递归字符切分,chunk 大小 512 字符,重叠 80 字符。[1]\n- 二、技术选型三、RAG 服务详细设计。[2]\n- 分别可获得 3000 元、8000 元、20000 元的长期服务奖励。[4]",
+      "citation_sources": [
+        "星云平台介绍.pdf",
+        "星云平台介绍.pdf",
+        "员工手册.md"
+      ],
+      "citation_hit": false,
+      "keyword_hit": true,
+      "refused": false,
+      "latency_ms": 42,
+      "error": ""
+    },
+    {
+      "question": "向量库用的什么索引，参数是什么？",
+      "gold_source": "技术架构说明.md",
+      "expect_refusal": false,
+      "retrieved_sources": [
+        "星云平台介绍.pdf",
+        "星云平台介绍.pdf",
+        "技术架构说明.md",
+        "技术架构说明.md",
+        "星云平台介绍.pdf"
+      ],
+      "hit_rank": 1,
+      "recall_at_k": true,
+      "precision_at_k": 1.0,
+      "reciprocal_rank": 1.0,
+      "answer_chunk_rank": 1,
+      "answer_hit_at_k": true,
+      "answer_rr": 1.0,
+      "answer": "（离线抽取模式·未调用大模型）\n- 4. **向量存储**:Milvus 使用 HNSW 索引,参数 M=16、efConstruction=200。[1]\n- - 向量库单集合支持 1 亿条向量,检索召回率 Recall@10 达到 0.96;[2]\n- | 向量库 | Milvus 2.4 | 智能问答的向量检索 |。[3]\n- 3. 向量库的索引重建目前需要停机 20 分钟,计划改造成在线双写切换。[5]",
+      "citation_sources": [
+        "星云平台介绍.pdf",
+        "星云平台介绍.pdf",
+        "技术架构说明.md",
+        "星云平台介绍.pdf"
+      ],
+      "citation_hit": true,
+      "keyword_hit": true,
+      "refused": false,
+      "latency_ms": 44,
+      "error": ""
+    },
+    {
+      "question": "平台的 P99 检索延迟是多少？",
+      "gold_source": "技术架构说明.md",
+      "expect_refusal": false,
+      "retrieved_sources": [
+        "星云平台介绍.pdf",
+        "技术架构说明.md",
+        "星云平台介绍.pdf",
+        "技术架构说明.md",
+        "产品FAQ.md"
+      ],
+      "hit_rank": 1,
+      "recall_at_k": true,
+      "precision_at_k": 0.8,
+      "reciprocal_rank": 1.0,
+      "answer_chunk_rank": 1,
+      "answer_hit_at_k": true,
+      "answer_rr": 1.0,
+      "answer": "（离线抽取模式·未调用大模型）\n- 关键性能指标:P99 检索延迟 180 毫秒,端到端问答平均延迟 2.4 秒。[1]\n- 关键性能指标:P99 检索延迟 180 毫秒,端到端问答平均延迟 2.4 秒。[2]\n- 命中率约 62%,P99 延迟从 180 毫秒降至 45 毫秒。[3]\n- 命中率约 62%,P99 延迟从 180 毫秒降至 45 毫秒。[4]",
+      "citation_sources": [
+        "星云平台介绍.pdf",
+        "技术架构说明.md",
+        "星云平台介绍.pdf",
+        "技术架构说明.md"
+      ],
+      "citation_hit": true,
+      "keyword_hit": true,
+      "refused": false,
+      "latency_ms": 42,
+      "error": ""
+    },
+    {
+      "question": "向量库单集合能支持多少条向量数据？",
+      "gold_source": "技术架构说明.md",
+      "expect_refusal": false,
+      "retrieved_sources": [
+        "技术架构说明.md",
+        "星云平台介绍.pdf",
+        "产品FAQ.md",
+        "产品FAQ.md",
+        "技术架构说明.md"
+      ],
+      "hit_rank": 1,
+      "recall_at_k": true,
+      "precision_at_k": 0.6,
+      "reciprocal_rank": 1.0,
+      "answer_chunk_rank": 1,
+      "answer_hit_at_k": true,
+      "answer_rr": 1.0,
+      "answer": "（离线抽取模式·未调用大模型）\n- - 单集群支持 2000 QPS 的元数据查询;[1]\n- - 向量库单集合支持 1 亿条向量,检索召回率 Recall@10 达到 0.96;[1]\n- - 单集群支持 2000 QPS 的元数据查询;[2]\n- - 向量库单集合支持 1 亿条向量,检索召回率 Recall@10 达到 0.96;[2]",
+      "citation_sources": [
+        "技术架构说明.md",
+        "星云平台介绍.pdf"
+      ],
+      "citation_hit": true,
+      "keyword_hit": true,
+      "refused": false,
+      "latency_ms": 42,
+      "error": ""
+    },
+    {
+      "question": "密码多久需要更换一次？",
+      "gold_source": "信息安全规范.docx",
+      "expect_refusal": false,
+      "retrieved_sources": [
+        "信息安全规范.docx",
+        "信息安全规范.docx",
+        "产品FAQ.md",
+        "信息安全规范.docx",
+        "信息安全规范.docx"
+      ],
+      "hit_rank": 1,
+      "recall_at_k": true,
+      "precision_at_k": 0.8,
+      "reciprocal_rank": 1.0,
+      "answer_chunk_rank": 1,
+      "answer_hit_at_k": true,
+      "answer_rr": 1.0,
+      "answer": "（离线抽取模式·未调用大模型）\n- 第二条 密码长度不得少于 12 位,须包含大小写字母、数字与特殊符号中的至少三类。[1]\n- 第三条 密码须每 90 天更换一次,且不得与前 5 次使用过的密码重复。[1]\n- 大版本升级需要 30 分钟左右的停机窗口,。[3]",
+      "citation_sources": [
+        "信息安全规范.docx",
+        "产品FAQ.md"
+      ],
+      "citation_hit": true,
+      "keyword_hit": true,
+      "refused": false,
+      "latency_ms": 52,
+      "error": ""
+    },
+    {
+      "question": "公司数据分为几个级别，绝密级的示例是什么？",
+      "gold_source": "信息安全规范.docx",
+      "expect_refusal": false,
+      "retrieved_sources": [
+        "信息安全规范.docx",
+        "信息安全规范.docx",
+        "信息安全规范.docx",
+        "信息安全规范.docx",
+        "员工手册.md"
+      ],
+      "hit_rank": 1,
+      "recall_at_k": true,
+      "precision_at_k": 0.8,
+      "reciprocal_rank": 1.0,
+      "answer_chunk_rank": -1,
+      "answer_hit_at_k": false,
+      "answer_rr": 0.0,
+      "answer": "（离线抽取模式·未调用大模型）\n- 【表格 1】级别:L1;名称:公开;示例:官网宣传材料;[2]\n- 级别:L2;名称:内部;示例:内部通知、流程图;[2]",
+      "citation_sources": [
+        "信息安全规范.docx"
+      ],
+      "citation_hit": true,
+      "keyword_hit": false,
+      "refused": false,
+      "latency_ms": 44,
+      "error": ""
+    },
+    {
+      "question": "发现安全隐患并上报有什么奖励？",
+      "gold_source": "信息安全规范.docx",
+      "expect_refusal": false,
+      "retrieved_sources": [
+        "信息安全规范.docx",
+        "信息安全规范.docx",
+        "员工手册.md",
+        "星云平台介绍.pdf",
+        "技术架构说明.md"
+      ],
+      "hit_rank": 1,
+      "recall_at_k": true,
+      "precision_at_k": 0.4,
+      "reciprocal_rank": 1.0,
+      "answer_chunk_rank": 1,
+      "answer_hit_at_k": true,
+      "answer_rr": 1.0,
+      "answer": "（离线抽取模式·未调用大模型）\n- 第二十三条 第三方依赖须定期做漏洞扫描,发现高危漏洞应在 7 日内升级。[1]\n- 第二十九条 主动上报安全隐患且经核实的,公司给予 500 元至 5000 元的奖励。[1]\n- 第四十条 发现安全事件的员工须在 30 分钟内通过安全热线 400-000-0000 或。[2]\n- 第四十二条 每年至少组织两次安全应急演练,覆盖率须达到 80% 以上。[2]",
+      "citation_sources": [
+        "信息安全规范.docx",
+        "信息安全规范.docx"
+      ],
+      "citation_hit": true,
+      "keyword_hit": true,
+      "refused": false,
+      "latency_ms": 56,
+      "error": ""
+    },
+    {
+      "question": "员工离职当天权限多久内回收？",
+      "gold_source": "信息安全规范.docx",
+      "expect_refusal": false,
+      "retrieved_sources": [
+        "信息安全规范.docx",
+        "信息安全规范.docx",
+        "员工手册.md",
+        "信息安全规范.docx",
+        "差旅与费用报销制度.md"
+      ],
+      "hit_rank": 1,
+      "recall_at_k": true,
+      "precision_at_k": 0.6,
+      "reciprocal_rank": 1.0,
+      "answer_chunk_rank": 1,
+      "answer_hit_at_k": true,
+      "answer_rr": 1.0,
+      "answer": "（离线抽取模式·未调用大模型）\n- 第六条 员工离职当日,其全部系统权限由 IT 部门在 4 小时内回收。[1]\n- 合作结束后 24 小时内回收全部权限。[2]\n- 合作结束后 24 小时内回收全部权限。[4]\n- 4. 采购的固定资产须在行政部登记编号,员工离职时须归还。[5]",
+      "citation_sources": [
+        "信息安全规范.docx",
+        "信息安全规范.docx",
+        "信息安全规范.docx",
+        "差旅与费用报销制度.md"
+      ],
+      "citation_hit": true,
+      "keyword_hit": true,
+      "refused": false,
+      "latency_ms": 46,
+      "error": ""
+    },
+    {
+      "question": "公司的股票代码是多少？",
+      "gold_source": "",
+      "expect_refusal": true,
+      "retrieved_sources": [
+        "信息安全规范.docx",
+        "信息安全规范.docx",
+        "差旅与费用报销制度.md",
+        "差旅与费用报销制度.md",
+        "差旅与费用报销制度.md"
+      ],
+      "hit_rank": -1,
+      "recall_at_k": false,
+      "precision_at_k": 0.0,
+      "reciprocal_rank": 0.0,
+      "answer_chunk_rank": -1,
+      "answer_hit_at_k": false,
+      "answer_rr": 0.0,
+      "answer": "根据现有知识库无法回答该问题：没有检索到与该问题相关的文档片段。\n\n可能的原因：\n1. 知识库里还没有入库相关文档 —— 请先在左侧上传文件并点击「入库」；\n2. 问题用词与文档差异过大 —— 换一种更贴近原文的说法，或换个关键词再问；\n3. 文档已入库但切分/检索参数不合适 —— 可尝试调大「检索片段数」。",
+      "citation_sources": [],
+      "citation_hit": false,
+      "keyword_hit": false,
+      "refused": true,
+      "latency_ms": 51,
+      "error": ""
+    },
+    {
+      "question": "公司 CEO 的生日是哪一天？",
+      "gold_source": "",
+      "expect_refusal": true,
+      "retrieved_sources": [
+        "员工手册.md",
+        "员工手册.md",
+        "信息安全规范.docx",
+        "信息安全规范.docx",
+        "员工手册.md"
+      ],
+      "hit_rank": -1,
+      "recall_at_k": false,
+      "precision_at_k": 0.0,
+      "reciprocal_rank": 0.0,
+      "answer_chunk_rank": -1,
+      "answer_hit_at_k": false,
+      "answer_rr": 0.0,
+      "answer": "根据现有知识库无法回答该问题：没有检索到与该问题相关的文档片段。\n\n可能的原因：\n1. 知识库里还没有入库相关文档 —— 请先在左侧上传文件并点击「入库」；\n2. 问题用词与文档差异过大 —— 换一种更贴近原文的说法，或换个关键词再问；\n3. 文档已入库但切分/检索参数不合适 —— 可尝试调大「检索片段数」。",
+      "citation_sources": [],
+      "citation_hit": false,
+      "keyword_hit": false,
+      "refused": true,
+      "latency_ms": 45,
+      "error": ""
+    },
+    {
+      "question": "员工食堂午餐菜单有哪些菜？",
+      "gold_source": "",
+      "expect_refusal": true,
+      "retrieved_sources": [
+        "差旅与费用报销制度.md",
+        "员工手册.md",
+        "员工手册.md",
+        "差旅与费用报销制度.md",
+        "员工手册.md"
+      ],
+      "hit_rank": -1,
+      "recall_at_k": false,
+      "precision_at_k": 0.0,
+      "reciprocal_rank": 0.0,
+      "answer_chunk_rank": -1,
+      "answer_hit_at_k": false,
+      "answer_rr": 0.0,
+      "answer": "根据现有知识库无法回答该问题：没有检索到与该问题相关的文档片段。\n\n可能的原因：\n1. 知识库里还没有入库相关文档 —— 请先在左侧上传文件并点击「入库」；\n2. 问题用词与文档差异过大 —— 换一种更贴近原文的说法，或换个关键词再问；\n3. 文档已入库但切分/检索参数不合适 —— 可尝试调大「检索片段数」。",
+      "citation_sources": [],
+      "citation_hit": false,
+      "keyword_hit": false,
+      "refused": true,
+      "latency_ms": 48,
+      "error": ""
+    }
+  ],
+  "generated_at": "2026-10-08 18:18:33"
+}

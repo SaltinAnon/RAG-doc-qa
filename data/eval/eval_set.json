@@ -1,0 +1,247 @@
+{
+  "description": "RAG 系统检索与引用评测集。gold_source 为正确答案来源文档，gold_keywords 为答案中必须出现的关键信息，expect_refusal=true 表示知识库中确实没有答案，考察拒答能力。",
+  "version": "1.0",
+  "total": 27,
+  "cases": [
+    {
+      "question": "员工入职满一年后每年有多少天年假？",
+      "gold_source": "员工手册.md",
+      "gold_keywords": [
+        "5 天",
+        "5天"
+      ],
+      "expect_refusal": false
+    },
+    {
+      "question": "员工年假有多少天？",
+      "gold_source": "员工手册.md",
+      "gold_keywords": [
+        "5 天",
+        "5天"
+      ],
+      "expect_refusal": false
+    },
+    {
+      "question": "工龄二十年以上的员工年假是多少天？",
+      "gold_source": "员工手册.md",
+      "gold_keywords": [
+        "15 天",
+        "15天"
+      ],
+      "expect_refusal": false
+    },
+    {
+      "question": "忘记打卡每月最多可以补几次？",
+      "gold_source": "员工手册.md",
+      "gold_keywords": [
+        "5 次",
+        "5次"
+      ],
+      "expect_refusal": false
+    },
+    {
+      "question": "员工试用期是多久，薪酬怎么算？",
+      "gold_source": "员工手册.md",
+      "gold_keywords": [
+        "3 个月",
+        "80%"
+      ],
+      "expect_refusal": false
+    },
+    {
+      "question": "住房公积金缴存比例是多少？",
+      "gold_source": "员工手册.md",
+      "gold_keywords": [
+        "12%"
+      ],
+      "expect_refusal": false
+    },
+    {
+      "question": "出差住宿在北京每晚的报销上限是多少？",
+      "gold_source": "差旅与费用报销制度.md",
+      "gold_keywords": [
+        "600"
+      ],
+      "expect_refusal": false
+    },
+    {
+      "question": "出差餐补每天多少钱？",
+      "gold_source": "差旅与费用报销制度.md",
+      "gold_keywords": [
+        "120"
+      ],
+      "expect_refusal": false
+    },
+    {
+      "question": "费用发生后多久内必须提交报销？",
+      "gold_source": "差旅与费用报销制度.md",
+      "gold_keywords": [
+        "30"
+      ],
+      "expect_refusal": false
+    },
+    {
+      "question": "业务招待费人均标准是多少？",
+      "gold_source": "差旅与费用报销制度.md",
+      "gold_keywords": [
+        "300"
+      ],
+      "expect_refusal": false
+    },
+    {
+      "question": "自驾出差的油费补贴标准是多少？",
+      "gold_source": "差旅与费用报销制度.md",
+      "gold_keywords": [
+        "1.2"
+      ],
+      "expect_refusal": false
+    },
+    {
+      "question": "专业版的年费是多少？",
+      "gold_source": "产品FAQ.md",
+      "gold_keywords": [
+        "88000"
+      ],
+      "expect_refusal": false
+    },
+    {
+      "question": "新用户试用期多长，可以试用几次？",
+      "gold_source": "产品FAQ.md",
+      "gold_keywords": [
+        "30 天",
+        "30天"
+      ],
+      "expect_refusal": false
+    },
+    {
+      "question": "私有化部署的最低服务器配置要求是什么？",
+      "gold_source": "产品FAQ.md",
+      "gold_keywords": [
+        "32GB",
+        "8 核",
+        "8核"
+      ],
+      "expect_refusal": false
+    },
+    {
+      "question": "平台的 SLA 承诺可用性是多少？",
+      "gold_source": "产品FAQ.md",
+      "gold_keywords": [
+        "99.9%"
+      ],
+      "expect_refusal": false
+    },
+    {
+      "question": "智能问答模块支持多轮对话吗，记忆保留几轮？",
+      "gold_source": "产品FAQ.md",
+      "gold_keywords": [
+        "10 轮",
+        "10轮"
+      ],
+      "expect_refusal": false
+    },
+    {
+      "question": "RAG 服务里 chunk 的大小和重叠分别是多少？",
+      "gold_source": "技术架构说明.md",
+      "gold_sources": [
+        "技术架构说明.md",
+        "星云平台介绍.pdf"
+      ],
+      "gold_keywords": [
+        "512",
+        "80"
+      ],
+      "expect_refusal": false
+    },
+    {
+      "question": "向量库用的什么索引，参数是什么？",
+      "gold_source": "技术架构说明.md",
+      "gold_sources": [
+        "技术架构说明.md",
+        "星云平台介绍.pdf"
+      ],
+      "gold_keywords": [
+        "HNSW"
+      ],
+      "expect_refusal": false
+    },
+    {
+      "question": "平台的 P99 检索延迟是多少？",
+      "gold_source": "技术架构说明.md",
+      "gold_sources": [
+        "技术架构说明.md",
+        "星云平台介绍.pdf"
+      ],
+      "gold_keywords": [
+        "180"
+      ],
+      "expect_refusal": false
+    },
+    {
+      "question": "向量库单集合能支持多少条向量数据？",
+      "gold_source": "技术架构说明.md",
+      "gold_sources": [
+        "技术架构说明.md",
+        "星云平台介绍.pdf"
+      ],
+      "gold_keywords": [
+        "1 亿",
+        "1亿"
+      ],
+      "expect_refusal": false
+    },
+    {
+      "question": "密码多久需要更换一次？",
+      "gold_source": "信息安全规范.docx",
+      "gold_keywords": [
+        "90"
+      ],
+      "expect_refusal": false
+    },
+    {
+      "question": "公司数据分为几个级别，绝密级的示例是什么？",
+      "gold_source": "信息安全规范.docx",
+      "gold_keywords": [
+        "四级",
+        "并购"
+      ],
+      "expect_refusal": false
+    },
+    {
+      "question": "发现安全隐患并上报有什么奖励？",
+      "gold_source": "信息安全规范.docx",
+      "gold_keywords": [
+        "500",
+        "5000"
+      ],
+      "expect_refusal": false
+    },
+    {
+      "question": "员工离职当天权限多久内回收？",
+      "gold_source": "信息安全规范.docx",
+      "gold_keywords": [
+        "4 小时",
+        "4小时"
+      ],
+      "expect_refusal": false
+    },
+    {
+      "question": "公司的股票代码是多少？",
+      "gold_source": "",
+      "gold_keywords": [],
+      "expect_refusal": true
+    },
+    {
+      "question": "公司 CEO 的生日是哪一天？",
+      "gold_source": "",
+      "gold_keywords": [],
+      "expect_refusal": true
+    },
+    {
+      "question": "员工食堂午餐菜单有哪些菜？",
+      "gold_source": "",
+      "gold_keywords": [],
+      "expect_refusal": true
+    }
+  ]
+}

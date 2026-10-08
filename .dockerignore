@@ -1,0 +1,47 @@
+# ============================================================
+#  .dockerignore —— 减少构建上下文，加快构建速度
+#  规则：宿主机上有、但容器里要重新生成的，全部排除
+# ============================================================
+
+# 虚拟环境（容器里自己装）
+.venv/
+venv/
+env/
+
+# 向量库与缓存（容器里有独立的挂载卷）
+data/chroma/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+__pycache__/
+*.pyc
+*.pyo
+
+# 环境变量（里面有密钥，绝不能进镜像！）
+.env
+.env.*
+
+# 版本控制与 CI
+.git/
+.gitignore
+.github/
+
+# 文档与开发辅助（镜像里不需要，减小体积）
+# ⚠️ 注意：不能写 `*.md` —— 那会把 data/docs 下的示例 Markdown 文档一起排除掉，
+#    导致容器里的示例数据是空的。这种坑只有真正构建过才会发现。
+docs/
+README.md
+CONTRIBUTING.md
+process.txt
+
+# 编辑器与系统文件
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# 日志与临时文件
+logs/
+*.log
+.tmp-*/
+.tmp_*/

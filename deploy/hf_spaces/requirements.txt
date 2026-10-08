@@ -1,0 +1,36 @@
+# Hugging Face Spaces 专用依赖
+#
+# 说明：Space 的磁盘和构建时间都有限，这里**故意只装必需项**，
+# 不装 streamlit（Space 的 Streamlit SDK 自带）、不装 pytest、
+# 不装 requirements-local.txt 里的本地模型（BGE 会额外拉 500MB）。
+#
+# 版本与主 requirements.txt 保持一致，避免行为差异。
+
+# ---------- 编排 ----------
+langchain==0.3.14
+langchain-core==0.3.29
+langchain-community==0.3.14
+langchain-text-splitters==0.3.4
+langchain-chroma==0.2.0
+
+# ---------- 向量库 ----------
+# CPU 版本的 onnxruntime 体积小很多，Space 上没必要装 GPU 版
+chromadb==0.5.23
+onnxruntime==1.19.2
+
+# ---------- 文档解析 ----------
+pypdf==5.1.0
+python-docx==1.1.2
+
+# ---------- 检索增强 ----------
+rank-bm25==0.2.2
+numpy>=1.26,<3
+
+# ---------- 工具 ----------
+python-dotenv==1.0.1
+pydantic==2.10.4
+pydantic-settings==2.7.0
+
+# ---------- 可选：接入在线 LLM 时启用 ----------
+# 如果要用 OpenAI / DeepSeek / 智谱，取消下面这行的注释
+# langchain-openai==0.2.14

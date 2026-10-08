@@ -1,0 +1,88 @@
+# ============================================================
+#  一键启动后端 + 前端
+#
+#  用法：
+#      cd docker
+#      docker compose up --build
+#
+#  然后访问：
+#      前端 http://localhost:8501
+#      后端 API 文档 http://localhost:8000/docs
+#
+#  说明：两个服务用同一个镜像，只是启动命令不同 ——
+#  docker-compose 原生只支持 build context + dockerfile 组合，
+#  在 demo 里合并成一份代码更简单，也是可接受的取舍。
+# ============================================================
+
+services:
+  api:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    image: rag-docqa:latest
+    container_name: rag-api
+    command: >
+      uvicorn app.main:app
+      --host 0.0.0.0
+      --port 8000
+      --workers 2
+    ports:
+      - "8000:8000"
+    environment:
+      # ---- 应用 ----
+      APP_ENV: prod
+      LOG_LEVEL: INFO
+      API_KEY: ${API_KEY:-}
+      # ---- 模型（从宿主机 .env 传进来；不填则自动进入离线抽取模式）----
+      LLM_PROVIDER: ${LLM_PROVIDER:-offline}
+      LLM_MODEL: ${LLM_MODEL:-gpt-4o-mini}
+      LLM_API_KEY: ${LLM_API_KEY:-}
+      LLM_BASE_URL: ${LLM_BASE_URL:-}
+      EMBEDDING_PROVIDER: ${EMBEDDING_PROVIDER:-hash}
+      EMBEDDING_DIM: ${EMBEDDING_DIM:-512}
+      # ---- 检索 ----
+      TOP_K: ${TOP_K:-5}
+      FETCH_K: ${FETCH_K:-20}
+      HYBRID_ENABLED: ${HYBRID_ENABLED:-true}
+      RERANK_ENABLED: ${RERANK_ENABLED:-true}
+      # ---- 存储（指向挂载卷）----
+      CHROMA_DIR: /app/data/chroma
+      DOCS_DIR: /app/data/docs
+    volumes:
+      # 向量库持久化：容器重建后知识库不丢
+      - chroma_data:/app/data/chroma
+      # 示例文档：方便在容器里跑 scripts/ingest_cli.py
+      - ../data/docs:/app/data/docs:ro
+    restart: unless-stopped
+    networks:
+      - rag-net
+
+  ui:
+    image: rag-docqa:latest
+    container_name: rag-ui
+    depends_on:
+      api:
+        condition: service_healthy
+    command: >
+      streamlit run frontend/streamlit_app.py
+      --server.port 8501
+      --server.address 0.0.0.0
+      --server.headless true
+      --browser.gatherUsageStats false
+    ports:
+      - "8501:8501"
+    environment:
+      # Streamlit 前端通过服务名访问后端（Docker 内部 DNS）
+      RAG_API_BASE: http://api:8000
+      RAG_API_KEY: ${API_KEY:-}
+    restart: unless-stopped
+    networks:
+      - rag-net
+
+volumes:
+  chroma_data:
+    driver: local
+
+networks:
+  rag-net:
+    driver: bridge

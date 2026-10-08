@@ -1,0 +1,126 @@
+name: CI
+
+# ============================================================
+#  触发条件
+#  - push 到 main：跑完整流水线（测试 + 评测）
+#  - PR：只跑测试（更快，不阻塞评审）
+# ============================================================
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:  # 支持在 GitHub 页面上手动触发
+
+jobs:
+  # ----------------------------------------------------------
+  #  单元测试 + 端到端评测
+  # ----------------------------------------------------------
+  test:
+    name: 测试与评测 (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12"]
+
+    env:
+      # ⭐ 关键：CI 里强制离线模式
+      #    这样测试**不依赖任何 API Key、不花一分钱、不受网络抖动影响**。
+      #    这是整个项目能公开在 GitHub 上还保持 CI 常绿的根本原因。
+      LLM_PROVIDER: offline
+      EMBEDDING_PROVIDER: hash
+      EMBEDDING_DIM: "256"
+      CHROMA_DIR: data/chroma
+      API_KEY: ""
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 安装 Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+
+      - name: 安装依赖
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install fpdf2  # 用于生成示例 PDF（可选依赖，装不上也不影响测试）
+
+      # -------- 测试 --------
+      - name: 运行单元测试
+        run: pytest tests -v --tb=short
+
+      # -------- 端到端：生成数据 → 入库 → 评测 --------
+      - name: 生成示例文档与评测集
+        run: python scripts/make_sample_docs.py
+
+      - name: 批量入库
+        run: python scripts/ingest_cli.py --dir data/docs
+
+      - name: 运行检索评测（并作为质量门禁）
+        run: python scripts/evaluate.py --mode full -k 5
+
+      # -------- 端到端 HTTP 冒烟（起真实服务，脚本内保证一定关掉） --------
+      - name: 端到端 HTTP 冒烟测试
+        run: python scripts/smoke_test.py --port 8124
+
+      - name: 上传评测报告
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: eval-report-py${{ matrix.python-version }}
+          path: |
+            data/eval/report.json
+            data/eval/report.md
+          if-no-files-found: warn
+
+  # ----------------------------------------------------------
+  #  Docker 构建验证
+  #  保证「docker compose up 是能起来的」——README 里的承诺必须被 CI 守住
+  # ----------------------------------------------------------
+  docker:
+    name: Docker 镜像构建
+    runs-on: ubuntu-latest
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 设置 Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: 构建镜像（不推送，只验证能构建成功）
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: docker/Dockerfile
+          push: false
+          load: true
+          tags: rag-docqa:ci
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: 验证镜像能启动并响应健康检查
+        run: |
+          docker run -d --name rag-ci -p 8000:8000 \
+            -e LLM_PROVIDER=offline -e EMBEDDING_PROVIDER=hash \
+            rag-docqa:ci
+          for i in $(seq 1 30); do
+            if curl -fsS http://localhost:8000/healthz > /dev/null 2>&1; then
+              echo "✅ 服务已就绪"
+              curl -s http://localhost:8000/readyz | head -c 500
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "❌ 服务启动超时"
+          docker logs rag-ci
+          exit 1
+
+      - name: 清理
+        if: always()
+        run: docker rm -f rag-ci || true

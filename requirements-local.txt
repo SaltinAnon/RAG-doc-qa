@@ -1,0 +1,10 @@
+# ============================================================
+#  可选：本地开源模型（体积大，默认不装）
+#  装了之后可以把 EMBEDDING_PROVIDER 设成 local，
+#  用 BAAI/bge-small-zh-v1.5 做中文向量化，完全免费离线。
+#  安装：pip install -r requirements-local.txt
+#  注意：会下载 ~400MB 依赖 + ~100MB 模型，国内建议先设 HF 镜像：
+#        export HF_ENDPOINT=https://hf-mirror.com
+# ============================================================
+sentence-transformers==3.3.1
+torch>=2.2
