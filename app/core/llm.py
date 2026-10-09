@@ -660,12 +660,47 @@ def _explain_llm_error(exc: Exception) -> str:
     if status == 429 or "rate limit" in text.lower():
         return "触发限流（429）。稍后重试，或降低请求频率 / 升级套餐。"
     if "timeout" in text.lower() or "timed out" in text.lower() or "ConnectError" in name:
-        return (
-            "网络不可达或超时。\n"
-            f"  → 确认能访问 {settings.resolved_base_url or '提供商地址'}（公司网络/代理可能拦截）；\n"
-            "  → 或在 .env 里调大 LLM_TIMEOUT。"
-        )
+        return _explain_connection_error()
+    if "Connection error" in text or "APIConnectionError" in name:
+        return _explain_connection_error()
     return f"调用失败：{type(exc).__name__}: {text[:300]}"
+
+
+def _explain_connection_error() -> str:
+    """「连不上」是最容易被误判为「配置错」的一类问题，这里专门处理。
+
+    真实踩过的坑：用户配好了 `LLM_PROVIDER` / `LLM_MODEL` / `LLM_API_KEY`，
+    仍然报 `APIConnectionError: Connection error.`。原因是**进程继承了
+    HTTP_PROXY / HTTPS_PROXY 环境变量**，请求被导到一个不通的代理上 ——
+    这和 API 配置毫无关系，但错误信息里完全看不出来。
+
+    Returns:
+        多行排查建议。
+    """
+    from app.utils.netcheck import detect_proxies
+
+    base = settings.resolved_base_url or "(SDK 默认)"
+    lines = [
+        f"网络连接失败：无法访问 {base}。",
+        "  注意：这**不是** API Key 或模型名的问题，是网络层到不了。",
+    ]
+    proxies = detect_proxies()
+    if proxies:
+        shown = "；".join(f"{k}={v}" for k, v in proxies.items())
+        lines += [
+            f"  ⭐ 检测到进程里有代理环境变量：{shown}",
+            "     如果你的代理不通，请求就会被导到那里去，表现为 Connection error。",
+            "     验证（Windows PowerShell，设置后再启动服务）：",
+            '       $env:HTTP_PROXY=""; $env:HTTPS_PROXY=""; $env:ALL_PROXY=""',
+            "     或把 API 域名加进 NO_PROXY。",
+        ]
+    else:
+        lines += [
+            "  → 未检测到代理变量。请检查：DNS 能否解析该域名、",
+            "     公司网络 / 防火墙是否拦截、能否访问外网（试试手机热点）。",
+        ]
+    lines.append("  → 一键体检：python scripts/doctor.py")
+    return "\n".join(lines)
 
 
 @lru_cache(maxsize=2)

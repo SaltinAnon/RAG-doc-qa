@@ -75,6 +75,18 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     # 在**启动时**就喊出来，而不是等用户提问时收到一个没有线索的 500
     for warn in settings.llm_config_warnings:
         logger.warning("LLM 配置体检：%s", warn)
+
+    # 代理提示：进程继承了 HTTP_PROXY/HTTPS_PROXY 时，请求会走代理。
+    # 这是「配置都对却连不上 API」的头号元凶，而且从报错信息里完全看不出来。
+    from app.utils.netcheck import detect_proxies
+
+    proxies = detect_proxies()
+    if proxies and not settings.is_offline_llm:
+        logger.warning(
+            "检测到代理环境变量：%s。若调用大模型报 Connection error，"
+            "多半是请求被导到了这个代理上 —— 详情见 `python scripts/doctor.py`。",
+            "；".join(f"{k}={v}" for k, v in proxies.items()),
+        )
     if not settings.auth_enabled:
         logger.warning(
             "API_KEY 为空，接口鉴权已关闭。**部署到公网前必须设置 API_KEY**，"
@@ -217,6 +229,22 @@ async def healthz() -> HealthResponse:
     如果 liveness 里检查数据库，数据库抖动会导致容器被反复重启（雪崩）。
     """
     return HealthResponse(app_name=settings.app_name, env=settings.app_env, version=__version__)
+
+
+@app.get("/doctor", tags=["运维"], summary="LLM 连通性诊断")
+async def doctor(network: bool = True) -> ApiResponse:
+    """诊断「配了 API 还是连不上」的问题。
+
+    逐层检查：模型名 → 代理环境变量 → DNS → TCP → HTTPS，
+    并给出能照着做的结论。**不会修改任何配置。**
+
+    Args:
+        network: 是否执行联网探测（DNS/TCP/TLS）。设为 false 只查配置，更快。
+    """
+    from app.utils.netcheck import diagnose_llm
+
+    report = diagnose_llm(do_network=network)
+    return ApiResponse(data=report.to_dict())
 
 
 @app.get("/readyz", tags=["运维"], response_model=ReadyResponse, summary="就绪探针")

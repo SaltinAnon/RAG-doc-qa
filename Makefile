@@ -3,7 +3,7 @@
 #  没有 make 也没关系，每个目标下面都写了等价的原始命令
 # ============================================================
 
-.PHONY: help install install-local run-api run-ui ingest test eval eval-compare calibrate smoke clean docker-up docker-down
+.PHONY: help install install-local run-api run-ui ingest test eval eval-compare calibrate smoke doctor clean docker-up docker-down
 
 help:  ## 显示所有可用命令
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-18s\033[0m %s\n", $$1, $$2}'
@@ -39,6 +39,9 @@ calibrate:  ## 标定离线模式的拒答闸门阈值（换语料后必跑）
 
 smoke:  ## 端到端冒烟测试：自动起服务 → 打真实接口 → **自动关服务**
 	.venv/Scripts/python scripts/smoke_test.py
+
+doctor:  ## LLM 连通性体检（配了 API 还是连不上时先跑这个）
+	.venv/Scripts/python scripts/doctor.py
 
 docker-up:  ## 用 docker-compose 起后端 + 前端
 	docker compose -f docker/docker-compose.yml up --build

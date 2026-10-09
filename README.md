@@ -10,8 +10,6 @@
 
 ![Python](https://img.shields.io/badge/python-3.11%20%7C%203.12-blue)
 
-
-
 ![License](https://img.shields.io/badge/license-MIT-green)
 
 ---
@@ -262,11 +260,11 @@ EMBEDDING_PROVIDER=local          # 用 BAAI/bge-small-zh-v1.5
 
 > ⚠️ **一个很容易踩的坑：`LLM_MODEL` 必须跟着 `LLM_PROVIDER` 一起改。**
 >
-> 如果只改了 `LLM_PROVIDER=deepseek` 而 `LLM_MODEL` 还留着默认的
-> `gpt-4o-mini`，程序会拿 OpenAI 的模型名去请求 DeepSeek 的接口，
+> 如果只改了 `LLM_PROVIDER=deepseek` 而 `LLM_MODEL` 还留着默认的>   
+> `gpt-4o-mini`，程序会拿 OpenAI 的模型名去请求 DeepSeek 的接口，>   
 > 结果是 **HTTP 500**（而且看不到原因）。
 >
-> **最省事的做法：把 `LLM_MODEL` 留空** —— 程序会按 provider 自动选默认模型，
+> **最省事的做法：把 `LLM_MODEL` 留空** —— 程序会按 provider 自动选默认模型，>   
 > 从根上不会配错。配置是否自洽可以直接问接口：
 >
 > ```bash
@@ -274,8 +272,8 @@ EMBEDDING_PROVIDER=local          # 用 BAAI/bge-small-zh-v1.5
 > # llm_model_configured / llm_model_effective / llm_config_ok / llm_config_warnings
 > ```
 >
-> 各家默认模型：`openai → gpt-4o-mini`、`deepseek → deepseek-chat`、
-> `zhipu → glm-4-flash`、`moonshot → moonshot-v1-8k`、`ollama → qwen2.5:7b`。
+> 各家默认模型：`openai → gpt-4o-mini`、`deepseek → deepseek-chat`、>   
+> `zhipu → glm-4-flash`、`moonshot → moonshot-v1-8k`、`ollama → qwen2.5:7b`。>   
 > 详细排查见 [`docs/05-常见问题与排错.md`](docs/05-常见问题与排错.md)。
 
 ### 方式三：Docker 一键启动
@@ -338,6 +336,7 @@ python scripts/smoke_test.py
 | GET    | `/config/status`       | 运行时配置与降级状态           |
 | GET    | `/healthz` `/readyz`   | 存活 / 就绪探针            |
 
+
 示例：
 
 ```bash
@@ -384,7 +383,6 @@ curl -X POST http://localhost:8000/api/v1/query \
 }
 ```
 
-
 **拒答是一个字段，不是一段特殊文案。** 当知识库里没有相关内容时，系统不会编造答案：
 
 ```json
@@ -401,16 +399,15 @@ curl -X POST http://localhost:8000/api/v1/query \
 ```
 
 > 为什么要单独做 `refused` 字段：早期版本让调用方去 `answer` 里匹配「无法回答」
->   
+>
 > 这几个字来判断是否拒答 —— 文案改一个字判断就失灵，「拒答准确率」这个指标
->   
+>
 > 也就不再可信。现在链路里判定一次，作为字段一路传出去。
->   
+>
 > `refusal_reason` 取值：`no_retrieval`（检索为空）/ `model_refused`（模型或离线闸门
 
-
-> 判定资料不足）/ `empty_output`（模型返回空，属异常）。
-> **约定：`refused=true` 时 `citations` 一定为空** —— 拒答却挂着引用会制造
+> 判定资料不足）/ `empty_output`（模型返回空，属异常）。>   
+> **约定：`refused=true` 时 `citations` 一定为空** —— 拒答却挂着引用会制造>   
 > 「有据可依」的假象。
 
 ---
@@ -451,34 +448,34 @@ Newstart/
 
 ### 文档索引
 
-| 文档 | 内容 |
-|---|---|
-| `docs/01-快速开始.md` | 环境准备、四种运行方式、常见启动问题 |
-| `docs/02-架构设计.md` | 每个模块的设计理由与关键代码路径 |
-| `docs/05-常见问题与排错.md` | 报错速查表 |
+| 文档                   | 内容                 |
+| -------------------- | ------------------ |
+| `docs/01-快速开始.md`    | 环境准备、四种运行方式、常见启动问题 |
+| `docs/02-架构设计.md`    | 每个模块的设计理由与关键代码路径   |
+| `docs/05-常见问题与排错.md` | 报错速查表              |
 
 ---
 
 ## 技术栈
 
-| 层次 | 选型 |
-|---|---|
-| 语言 | Python 3.12 |
-| Web 框架 | FastAPI + Uvicorn |
-| 编排 | LangChain 0.3（Document / TextSplitter / LCEL） |
-| 向量库 | ChromaDB（PersistentClient） |
-| Embedding | OpenAI / BGE-small-zh / 本地哈希向量（可降级） |
-| LLM | 任意 OpenAI 兼容端点（OpenAI / DeepSeek / 智谱 / Ollama） |
-| 前端 | Streamlit |
-| 检索增强 | rank-bm25 + 自实现 RRF 融合与启发式重排 |
-| 部署 | Docker 多阶段构建 + docker-compose |
-| 质量保障 | pytest + GitHub Actions（含镜像构建与启动验证） |
+| 层次        | 选型                                              |
+| --------- | ----------------------------------------------- |
+| 语言        | Python 3.12                                     |
+| Web 框架    | FastAPI + Uvicorn                               |
+| 编排        | LangChain 0.3（Document / TextSplitter / LCEL）   |
+| 向量库       | ChromaDB（PersistentClient）                      |
+| Embedding | OpenAI / BGE-small-zh / 本地哈希向量（可降级）             |
+| LLM       | 任意 OpenAI 兼容端点（OpenAI / DeepSeek / 智谱 / Ollama） |
+| 前端        | Streamlit                                       |
+| 检索增强      | rank-bm25 + 自实现 RRF 融合与启发式重排                    |
+| 部署        | Docker 多阶段构建 + docker-compose                   |
+| 质量保障      | pytest + GitHub Actions（含镜像构建与启动验证）             |
 
 ---
 
 ## 已知限制
 
-1. **不支持扫描版 PDF**——只用 pypdf 提取文本层，未集成 OCR。
+1. **不支持扫描版 PDF**——只用 pypdf 提取文本层，未集成 OCR。     
    遇到扫描件会明确报错并给出转文本的方法，而不是静默返回空结果。
 2. **向量库为单机 ChromaDB**——`VectorStore` 已做抽象，换 Milvus/Qdrant 只改一个文件。
 3. **重排序为启发式**——效果上限低于 Cross-Encoder，`_rerank()` 可独立替换。
