@@ -6,7 +6,7 @@
 >
 > **不需要任何 API Key 也能完整跑通全链路。**
 
-![CI](https://github.com/your-username/rag-doc-qa/actions/workflows/ci.yml/badge.svg)
+![CI](https://github.com/SaltinAnon/rag-doc-qa/actions/workflows/ci.yml/badge.svg)
 
 ![Python](https://img.shields.io/badge/python-3.11%20%7C%203.12-blue)
 
