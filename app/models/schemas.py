@@ -151,3 +151,12 @@ class ReadyResponse(BaseModel):
     llm_provider: str
     llm_offline: bool
     detail: str = ""
+
+    # ---- LLM 配置体检 ----
+    # 目的：让「provider 与 model 对不上」这类配置错误**在探针上就可见**，
+    # 而不是等用户提问时收到一个没有线索的 HTTP 500。
+    llm_model_configured: str = Field(default="", description=".env 里写的模型名")
+    llm_model_effective: str = Field(default="", description="实际会发出去的模型名")
+    llm_base_url: str = Field(default="", description="实际使用的 base_url")
+    llm_config_ok: bool = Field(default=True, description="LLM 配置是否自洽")
+    llm_config_warnings: list[str] = Field(default_factory=list, description="配置体检发现的问题")

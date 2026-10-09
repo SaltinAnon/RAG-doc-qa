@@ -54,7 +54,7 @@ from langchain_core.prompts import ChatPromptTemplate
 
 from app.config import settings
 from app.core.embeddings import describe_embeddings, get_embeddings
-from app.core.llm import ExtractiveLLM, describe_llm, get_llm, is_offline
+from app.core.llm import ExtractiveLLM, _explain_llm_error, describe_llm, get_llm, is_offline
 from app.core.prompts import (
     REFUSAL_EMPTY_OUTPUT,
     REFUSAL_MODEL,
@@ -326,13 +326,7 @@ class RAGChain:
             )
         except Exception as exc:
             logger.error("LLM 调用失败：%s", exc, exc_info=True)
-            raise LLMInvocationError(
-                f"生成回答失败：{exc}\n"
-                "排查建议：\n"
-                "  1. 检查 .env 里的 LLM_API_KEY / LLM_BASE_URL 是否正确；\n"
-                "  2. 网络是否可达（公司网络可能拦了 API 域名）；\n"
-                "  3. 临时把 LLM_PROVIDER 设为 offline 验证链路本身是否正常。"
-            ) from exc
+            raise LLMInvocationError(_explain_llm_error(exc)) from exc
 
         answer_text = (raw_answer or "").strip()
 
@@ -480,6 +474,13 @@ class RAGChain:
             "embedding": describe_embeddings(emb),
             "llm": describe_llm(self._llm),
             "llm_offline": is_offline(self._llm),
+            # —— LLM 配置体检：让「配置错了」在接口层面可见，而不是只藏在日志里 ——
+            "llm_provider": settings.llm_provider,
+            "llm_model_configured": settings.llm_model,
+            "llm_model_effective": settings.resolved_llm_model,
+            "llm_base_url": settings.resolved_base_url or "(SDK 默认)",
+            "llm_config_ok": not settings.llm_config_warnings,
+            "llm_config_warnings": settings.llm_config_warnings,
             "hybrid_enabled": settings.hybrid_enabled,
             "rerank_enabled": settings.rerank_enabled,
             "top_k": settings.top_k,

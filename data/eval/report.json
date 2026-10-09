@@ -11,7 +11,7 @@
     "citation_accuracy": 0.9583333333333334,
     "keyword_hit_rate": 0.8333333333333334,
     "refusal_accuracy": 1.0,
-    "avg_latency_ms": 49.370370370370374,
+    "avg_latency_ms": 48.25925925925926,
     "errors": 0,
     "k": 5,
     "mode": "full",
@@ -45,7 +45,7 @@
       "citation_hit": true,
       "keyword_hit": true,
       "refused": false,
-      "latency_ms": 118,
+      "latency_ms": 109,
       "error": ""
     },
     {
@@ -102,7 +102,7 @@
       "citation_hit": true,
       "keyword_hit": false,
       "refused": false,
-      "latency_ms": 48,
+      "latency_ms": 47,
       "error": ""
     },
     {
@@ -132,7 +132,7 @@
       "citation_hit": true,
       "keyword_hit": true,
       "refused": false,
-      "latency_ms": 53,
+      "latency_ms": 52,
       "error": ""
     },
     {
@@ -161,7 +161,7 @@
       "citation_hit": true,
       "keyword_hit": true,
       "refused": false,
-      "latency_ms": 49,
+      "latency_ms": 47,
       "error": ""
     },
     {
@@ -190,7 +190,7 @@
       "citation_hit": true,
       "keyword_hit": false,
       "refused": false,
-      "latency_ms": 52,
+      "latency_ms": 50,
       "error": ""
     },
     {
@@ -248,7 +248,7 @@
       "citation_hit": true,
       "keyword_hit": true,
       "refused": false,
-      "latency_ms": 40,
+      "latency_ms": 42,
       "error": ""
     },
     {
@@ -277,7 +277,7 @@
       "citation_hit": true,
       "keyword_hit": false,
       "refused": false,
-      "latency_ms": 53,
+      "latency_ms": 49,
       "error": ""
     },
     {
@@ -305,7 +305,7 @@
       "citation_hit": true,
       "keyword_hit": true,
       "refused": false,
-      "latency_ms": 43,
+      "latency_ms": 41,
       "error": ""
     },
     {
@@ -335,7 +335,7 @@
       "citation_hit": true,
       "keyword_hit": true,
       "refused": false,
-      "latency_ms": 53,
+      "latency_ms": 52,
       "error": ""
     },
     {
@@ -365,7 +365,7 @@
       "citation_hit": true,
       "keyword_hit": true,
       "refused": false,
-      "latency_ms": 44,
+      "latency_ms": 43,
       "error": ""
     },
     {
@@ -394,7 +394,7 @@
       "citation_hit": true,
       "keyword_hit": true,
       "refused": false,
-      "latency_ms": 46,
+      "latency_ms": 44,
       "error": ""
     },
     {
@@ -423,7 +423,7 @@
       "citation_hit": true,
       "keyword_hit": true,
       "refused": false,
-      "latency_ms": 43,
+      "latency_ms": 44,
       "error": ""
     },
     {
@@ -484,7 +484,7 @@
       "citation_hit": true,
       "keyword_hit": true,
       "refused": false,
-      "latency_ms": 44,
+      "latency_ms": 43,
       "error": ""
     },
     {
@@ -576,7 +576,7 @@
       "citation_hit": true,
       "keyword_hit": true,
       "refused": false,
-      "latency_ms": 42,
+      "latency_ms": 41,
       "error": ""
     },
     {
@@ -605,7 +605,7 @@
       "citation_hit": true,
       "keyword_hit": true,
       "refused": false,
-      "latency_ms": 42,
+      "latency_ms": 40,
       "error": ""
     },
     {
@@ -634,7 +634,7 @@
       "citation_hit": true,
       "keyword_hit": true,
       "refused": false,
-      "latency_ms": 52,
+      "latency_ms": 51,
       "error": ""
     },
     {
@@ -662,7 +662,7 @@
       "citation_hit": true,
       "keyword_hit": false,
       "refused": false,
-      "latency_ms": 44,
+      "latency_ms": 42,
       "error": ""
     },
     {
@@ -722,7 +722,7 @@
       "citation_hit": true,
       "keyword_hit": true,
       "refused": false,
-      "latency_ms": 46,
+      "latency_ms": 47,
       "error": ""
     },
     {
@@ -748,7 +748,7 @@
       "citation_hit": false,
       "keyword_hit": false,
       "refused": true,
-      "latency_ms": 51,
+      "latency_ms": 50,
       "error": ""
     },
     {
@@ -774,7 +774,7 @@
       "citation_hit": false,
       "keyword_hit": false,
       "refused": true,
-      "latency_ms": 45,
+      "latency_ms": 46,
       "error": ""
     },
     {
@@ -800,9 +800,9 @@
       "citation_hit": false,
       "keyword_hit": false,
       "refused": true,
-      "latency_ms": 48,
+      "latency_ms": 46,
       "error": ""
     }
   ],
-  "generated_at": "2026-10-08 18:18:33"
+  "generated_at": "2026-10-09 11:24:42"
 }

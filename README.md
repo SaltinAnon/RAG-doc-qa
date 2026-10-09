@@ -28,7 +28,7 @@
 | --------------- | ---------------------------------------------------------- |
 | 没 API Key 就跑不了  | **三层 Embedding + 自动降级**，零成本也能完整演示检索与引用溯源                   |
 | 只在 notebook 里能跑 | 分模块工程结构（config / core / api / models / utils），全部带类型注解      |
-| 没有质量意识          | 8 个测试文件 / 228 个用例 + 可复现的评测脚本（Recall@K / MRR / 引用准确率 / 拒答率） |
+| 没有质量意识          | 9 个测试文件 / 259 个用例 + 可复现的评测脚本（Recall@K / MRR / 引用准确率 / 拒答率） |
 | 「在我机器上能跑」       | Docker 多阶段构建 + GitHub Actions 里真跑 `docker run` 验证健康检查      |
 | 中文文档效果差         | 切分符、分词器、Prompt 全部针对中文重新设计（不是翻译英文教程）                        |
 | 引用张冠李戴          | 编号化上下文 + 强制引用 Prompt + 正则回查 + 兜底机制                         |
@@ -244,7 +244,7 @@ cp .env.example .env
 ```ini
 # DeepSeek（性价比高，中文好）
 LLM_PROVIDER=deepseek
-LLM_MODEL=deepseek-chat
+LLM_MODEL=deepseek-chat          # ⚠️ 必须与 PROVIDER 匹配！
 LLM_API_KEY=sk-你的key
 EMBEDDING_PROVIDER=openai
 EMBEDDING_MODEL=text-embedding-3-small
@@ -259,6 +259,24 @@ EMBEDDING_PROVIDER=local          # 用 BAAI/bge-small-zh-v1.5
 ```
 
 重启后端即可。
+
+> ⚠️ **一个很容易踩的坑：`LLM_MODEL` 必须跟着 `LLM_PROVIDER` 一起改。**
+>
+> 如果只改了 `LLM_PROVIDER=deepseek` 而 `LLM_MODEL` 还留着默认的
+> `gpt-4o-mini`，程序会拿 OpenAI 的模型名去请求 DeepSeek 的接口，
+> 结果是 **HTTP 500**（而且看不到原因）。
+>
+> **最省事的做法：把 `LLM_MODEL` 留空** —— 程序会按 provider 自动选默认模型，
+> 从根上不会配错。配置是否自洽可以直接问接口：
+>
+> ```bash
+> curl http://localhost:8000/readyz
+> # llm_model_configured / llm_model_effective / llm_config_ok / llm_config_warnings
+> ```
+>
+> 各家默认模型：`openai → gpt-4o-mini`、`deepseek → deepseek-chat`、
+> `zhipu → glm-4-flash`、`moonshot → moonshot-v1-8k`、`ollama → qwen2.5:7b`。
+> 详细排查见 [`docs/05-常见问题与排错.md`](docs/05-常见问题与排错.md)。
 
 ### 方式三：Docker 一键启动
 
@@ -382,9 +400,12 @@ curl -X POST http://localhost:8000/api/v1/query \
 }
 ```
 
-> 为什么要单独做 `refused` 字段：早期版本让调用方去 `answer` 里匹配「无法回答」>   
-> 这几个字来判断是否拒答 —— 文案改一个字判断就失灵，「拒答准确率」这个指标>   
-> 也就不再可信。现在链路里判定一次，作为字段一路传出去。>   
+> 为什么要单独做 `refused` 字段：早期版本让调用方去 `answer` 里匹配「无法回答」
+>   
+> 这几个字来判断是否拒答 —— 文案改一个字判断就失灵，「拒答准确率」这个指标
+>   
+> 也就不再可信。现在链路里判定一次，作为字段一路传出去。
+>   
 > `refusal_reason` 取值：`no_retrieval`（检索为空）/ `model_refused`（模型或离线闸门
 
 
@@ -419,7 +440,7 @@ Newstart/
 │   ├── evaluate.py            # 评测 Recall@K / MRR / 引用准确率 / 拒答率
 │   ├── calibrate_gate.py      # 标定离线模式的拒答闸门阈值（用数据，不拍脑袋）
 │   └── smoke_test.py          # 端到端冒烟测试（自动起服务 + try/finally 自动关服务）
-├── tests/                     # 8 个测试文件 / 228 个用例
+├── tests/                     # 9 个测试文件 / 259 个用例
 ├── docker/                    # Dockerfile + docker-compose.yml
 ├── data/
 │   ├── docs/                  # 待入库文档

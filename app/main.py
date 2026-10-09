@@ -70,6 +70,11 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
             "未配置大模型 API Key，当前为【离线抽取模式】：答案从原文抽取，"
             "不会经过大模型生成。配置 LLM_API_KEY 后自动切换。"
         )
+
+    # 配置体检：把「provider 与 model/base_url/Key 对不上」这类问题
+    # 在**启动时**就喊出来，而不是等用户提问时收到一个没有线索的 500
+    for warn in settings.llm_config_warnings:
+        logger.warning("LLM 配置体检：%s", warn)
     if not settings.auth_enabled:
         logger.warning(
             "API_KEY 为空，接口鉴权已关闭。**部署到公网前必须设置 API_KEY**，"
@@ -238,6 +243,12 @@ async def readyz() -> ReadyResponse:
         llm_provider=settings.llm_provider,
         llm_offline=settings.is_offline_llm,
         detail=detail,
+        # 配置体检：探针返回里带一份，排查时不用再去翻日志
+        llm_model_configured=settings.llm_model,
+        llm_model_effective=settings.resolved_llm_model,
+        llm_base_url=settings.resolved_base_url or "(SDK 默认)",
+        llm_config_ok=not settings.llm_config_warnings,
+        llm_config_warnings=settings.llm_config_warnings,
     )
 
 

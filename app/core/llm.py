@@ -589,12 +589,23 @@ def _build_chat_model() -> LLM:
     if not key:
         raise RuntimeError("未配置任何 API Key")
 
+    # ⚠️ 必须用 resolved_llm_model，不能直接用 settings.llm_model：
+    #    后者在「只改了 LLM_PROVIDER、没改 LLM_MODEL」时会残留 gpt-4o-mini，
+    #    拿去请求 DeepSeek/智谱会直接 400，最后表现为一个没有线索的 500。
+    model = settings.resolved_llm_model
+    if model != settings.llm_model:
+        logger.warning(
+            "LLM_MODEL='%s' 与 provider='%s' 不匹配，已自动改用 '%s'。"
+            "建议在 .env 里显式写成：LLM_MODEL=%s",
+            settings.llm_model, settings.llm_provider, model, model,
+        )
+
     logger.info(
         "LLM 使用在线模型：provider=%s model=%s base_url=%s",
-        settings.llm_provider, settings.llm_model, settings.resolved_base_url or "(默认)",
+        settings.llm_provider, model, settings.resolved_base_url or "(SDK 默认)",
     )
     return ChatOpenAI(
-        model=settings.llm_model,
+        model=model,
         api_key=key,
         base_url=settings.resolved_base_url or None,
         temperature=settings.llm_temperature,
@@ -602,6 +613,59 @@ def _build_chat_model() -> LLM:
         timeout=settings.llm_timeout,
         max_retries=2,  # 网络抖动自动重试，失败两次就不再拖时间
     )
+
+
+def _explain_llm_error(exc: Exception) -> str:
+    """把 SDK 抛出的异常翻译成**能照着做**的排查建议。
+
+    这一步的价值：OpenAI SDK 的异常信息对没排查过的人来说几乎无用
+    （比如 `Error code: 400 - {'error': {'message': 'Model Not Exist'}}`），
+    用户看到的是一个 500。这里按 HTTP 状态码分流，直接告诉他该改哪一行。
+
+    Args:
+        exc: 调用 LLM 时捕获到的异常。
+
+    Returns:
+        多行中文排查建议（不含原始堆栈，堆栈在日志里）。
+    """
+    text = str(exc)
+    status = getattr(exc, "status_code", None)
+    name = type(exc).__name__
+    model = settings.resolved_llm_model
+    provider = settings.llm_provider
+
+    if status in (401, 403) or "AuthenticationError" in name or "invalid_api_key" in text:
+        return (
+            f"鉴权失败（{status or '401'}）：{provider} 不认这个 API Key。\n"
+            "  → 检查 .env 的 LLM_API_KEY 是否填错/过期/多打了引号或空格；\n"
+            "  → 确认这个 Key 是**从该提供商**申请的，不是别家的（DeepSeek 和 OpenAI 的 Key 不通用）。"
+        )
+    if status == 404 or "model_not_found" in text or "Model Not Exist" in text or "does not exist" in text:
+        return (
+            f"模型不存在：{provider} 上没有名为 '{model}' 的模型。\n"
+            f"  → 在 .env 里把 LLM_MODEL 改成 {provider} 真实提供的模型名\n"
+            "     （DeepSeek: deepseek-chat / deepseek-reasoner；"
+            "智谱: glm-4-flash；Moonshot: moonshot-v1-8k）；\n"
+            "  → 或者留空 LLM_MODEL，让程序按 LLM_PROVIDER 自动选默认模型。"
+        )
+    if status == 400:
+        return (
+            f"请求被拒绝（400）：{text[:200]}\n"
+            f"  → 最常见的原因是 LLM_MODEL 与实际提供商不匹配（当前 model='{model}'）；\n"
+            f"  → 其次是 LLM_BASE_URL 写错（当前 '{settings.resolved_base_url or 'SDK 默认'}'），"
+            "注意多数提供商要带 /v1 后缀。"
+        )
+    if status == 402 or "insufficient" in text.lower() or "quota" in text.lower():
+        return "账户余额/额度不足。请到对应平台充值或更换 Key。"
+    if status == 429 or "rate limit" in text.lower():
+        return "触发限流（429）。稍后重试，或降低请求频率 / 升级套餐。"
+    if "timeout" in text.lower() or "timed out" in text.lower() or "ConnectError" in name:
+        return (
+            "网络不可达或超时。\n"
+            f"  → 确认能访问 {settings.resolved_base_url or '提供商地址'}（公司网络/代理可能拦截）；\n"
+            "  → 或在 .env 里调大 LLM_TIMEOUT。"
+        )
+    return f"调用失败：{type(exc).__name__}: {text[:300]}"
 
 
 @lru_cache(maxsize=2)
