@@ -26,7 +26,7 @@
 | --------------- | ---------------------------------------------------------- |
 | 没 API Key 就跑不了  | **三层 Embedding + 自动降级**，零成本也能完整演示检索与引用溯源                   |
 | 只在 notebook 里能跑 | 分模块工程结构（config / core / api / models / utils），全部带类型注解      |
-| 没有质量意识          | 9 个测试文件 / 259 个用例 + 可复现的评测脚本（Recall@K / MRR / 引用准确率 / 拒答率） |
+| 没有质量意识          | 10 个测试文件 / 282 个用例 + 可复现的评测脚本（Recall@K / MRR / 引用准确率 / 拒答率） |
 | 「在我机器上能跑」       | Docker 多阶段构建 + GitHub Actions 里真跑 `docker run` 验证健康检查      |
 | 中文文档效果差         | 切分符、分词器、Prompt 全部针对中文重新设计（不是翻译英文教程）                        |
 | 引用张冠李戴          | 编号化上下文 + 强制引用 Prompt + 正则回查 + 兜底机制                         |
@@ -260,11 +260,14 @@ EMBEDDING_PROVIDER=local          # 用 BAAI/bge-small-zh-v1.5
 
 > ⚠️ **一个很容易踩的坑：`LLM_MODEL` 必须跟着 `LLM_PROVIDER` 一起改。**
 >
-> 如果只改了 `LLM_PROVIDER=deepseek` 而 `LLM_MODEL` 还留着默认的>   
-> `gpt-4o-mini`，程序会拿 OpenAI 的模型名去请求 DeepSeek 的接口，>   
+> 如果只改了 `LLM_PROVIDER=deepseek` 而 `LLM_MODEL` 还留着默认的
+>   
+> `gpt-4o-mini`，程序会拿 OpenAI 的模型名去请求 DeepSeek 的接口，
+>   
 > 结果是 **HTTP 500**（而且看不到原因）。
 >
-> **最省事的做法：把 `LLM_MODEL` 留空** —— 程序会按 provider 自动选默认模型，>   
+> **最省事的做法：把 `LLM_MODEL` 留空** —— 程序会按 provider 自动选默认模型，
+>   
 > 从根上不会配错。配置是否自洽可以直接问接口：
 >
 > ```bash
@@ -272,8 +275,10 @@ EMBEDDING_PROVIDER=local          # 用 BAAI/bge-small-zh-v1.5
 > # llm_model_configured / llm_model_effective / llm_config_ok / llm_config_warnings
 > ```
 >
-> 各家默认模型：`openai → gpt-4o-mini`、`deepseek → deepseek-chat`、>   
-> `zhipu → glm-4-flash`、`moonshot → moonshot-v1-8k`、`ollama → qwen2.5:7b`。>   
+> 各家默认模型：`openai → gpt-4o-mini`、`deepseek → deepseek-chat`、
+>   
+> `zhipu → glm-4-flash`、`moonshot → moonshot-v1-8k`、`ollama → qwen2.5:7b`。
+>   
 > 详细排查见 [`docs/05-常见问题与排错.md`](docs/05-常见问题与排错.md)。
 
 ### 方式三：Docker 一键启动
@@ -406,8 +411,10 @@ curl -X POST http://localhost:8000/api/v1/query \
 >
 > `refusal_reason` 取值：`no_retrieval`（检索为空）/ `model_refused`（模型或离线闸门
 
-> 判定资料不足）/ `empty_output`（模型返回空，属异常）。>   
-> **约定：`refused=true` 时 `citations` 一定为空** —— 拒答却挂着引用会制造>   
+> 判定资料不足）/ `empty_output`（模型返回空，属异常）。
+>   
+> **约定：`refused=true` 时 `citations` 一定为空** —— 拒答却挂着引用会制造
+>   
 > 「有据可依」的假象。
 
 ---
@@ -437,7 +444,7 @@ Newstart/
 │   ├── evaluate.py            # 评测 Recall@K / MRR / 引用准确率 / 拒答率
 │   ├── calibrate_gate.py      # 标定离线模式的拒答闸门阈值（用数据，不拍脑袋）
 │   └── smoke_test.py          # 端到端冒烟测试（自动起服务 + try/finally 自动关服务）
-├── tests/                     # 9 个测试文件 / 259 个用例
+├── tests/                     # 10 个测试文件 / 282 个用例
 ├── docker/                    # Dockerfile + docker-compose.yml
 ├── data/
 │   ├── docs/                  # 待入库文档
@@ -475,7 +482,8 @@ Newstart/
 
 ## 已知限制
 
-1. **不支持扫描版 PDF**——只用 pypdf 提取文本层，未集成 OCR。     
+1. **不支持扫描版 PDF**——只用 pypdf 提取文本层，未集成 OCR。
+     
    遇到扫描件会明确报错并给出转文本的方法，而不是静默返回空结果。
 2. **向量库为单机 ChromaDB**——`VectorStore` 已做抽象，换 Milvus/Qdrant 只改一个文件。
 3. **重排序为启发式**——效果上限低于 Cross-Encoder，`_rerank()` 可独立替换。

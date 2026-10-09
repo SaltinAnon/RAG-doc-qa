@@ -36,11 +36,14 @@ _PROXY_ENV_KEYS = (
     "HTTP_PROXY", "HTTPS_PROXY", "ALL_PROXY",
     "http_proxy", "https_proxy", "all_proxy",
 )
-_NO_PROXY_KEYS = ("NO_PROXY", "no_proxy")
 
-# ⚠️ Windows 上 `os.environ` 是**大小写不敏感**的 —— `HTTP_PROXY` 和 `http_proxy`
-#    其实是同一个变量。所以查代理时必须**按变量名去重**，否则会把同一个代理
-#    报成两遍（界面上看起来像配了四个代理，反而让人更糊涂）。
+# ⚠️ 平台差异（真实踩过）：
+#   · Windows 的 `os.environ` **大小写不敏感** —— `HTTP_PROXY` 与 `http_proxy`
+#     其实是同一个变量，「同时设两个不同值」在 Windows 上根本不可能出现。
+#   · Linux 大小写**严格敏感** —— `http_proxy` 和 `HTTP_PROXY` 是两个独立变量，
+#     用户完全可能只设了小写那个（很多文档/脚本就是这么写的）。
+#   所以检测**必须遍历 `os.environ` 里真实存在的键**、按大写归一去重，
+#   而不是只去 `get()` 那三个大写名 —— 后者在 Linux 上会 100% 漏检小写代理。
 _PROXY_CANONICAL = ("HTTP_PROXY", "HTTPS_PROXY", "ALL_PROXY")
 
 
@@ -86,21 +89,25 @@ def detect_proxies() -> dict[str, str]:
     于是「请求 API 失败」根本不是 API 的问题，而是被导到了一个不通的代理上。
 
     Windows 上 `os.environ` 大小写不敏感（`HTTP_PROXY` 与 `http_proxy` 是同一个），
-    因此这里统一按大写名去重，避免同一个代理被报成好几条。
+    Linux 上则严格区分 —— 因此这里**遍历环境里真实存在的键**、按大写名归一去重：
+    既能捞到用户实际写的小写名（Linux），又不会把同一个代理报成好几条。
 
     Returns:
-        {变量名: 值}，只包含真正设置过的。
+        {变量名: 值}，只包含真正设置过的；键是**用户实际使用的**那个名字。
     """
     found: dict[str, str] = {}
-    for key in _PROXY_CANONICAL:
-        value = os.environ.get(key)
-        if value:
-            # 用**实际**的环境变量名（可能是小写写入的），便于用户对照自己的配置
-            actual = next(
-                (k for k in os.environ if k.upper() == key and os.environ[k] == value),
-                key,
-            )
-            found[actual] = value
+    for raw_key, value in os.environ.items():
+        if not value:
+            continue
+        canonical = raw_key.upper()
+        if canonical not in _PROXY_CANONICAL:
+            continue
+        # 大小写视为同一个变量：同一 canonical 只保留**首个**命中的实际写法。
+        # （Windows 下两者本就是同一个；Linux 下若真被设了两份，只报一份即可 ——
+        #   报重复值反而会让界面比配置本身更让人困惑。）
+        if canonical in {k.upper() for k in found}:
+            continue
+        found[raw_key] = value
     return found
 
 
@@ -115,7 +122,11 @@ def _check_proxy_env() -> CheckResult:
         )
 
     # 有代理 → 必须真的测一下通不通，因为「有代理且不通」正是最坑的形态
-    proxy_url = proxies.get("HTTPS_PROXY") or proxies.get("https_proxy") or next(iter(proxies.values()))
+    # 优先挑 HTTPS_PROXY（API 走 https 时 httpx 主要看它），否则取第一个。
+    proxy_url = next(
+        (v for k, v in proxies.items() if k.upper() == "HTTPS_PROXY"),
+        next(iter(proxies.values())),
+    )
     parsed = urlparse(proxy_url)
     host, port = parsed.hostname or "", parsed.port or 0
 

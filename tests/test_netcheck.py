@@ -40,12 +40,35 @@ def clean_proxy_env(monkeypatch):
     return monkeypatch
 
 
+@pytest.fixture
+def case_sensitive_proxy_env(monkeypatch):
+    """把 `netcheck.os.environ` 换成一个**严格区分大小写**的映射。
+
+    `monkeypatch.setenv` 在 Windows 上走的是大小写不敏感的 `os.environ`，
+    没法构造「只有小写 http_proxy」这种局面 —— 而这正是 Linux CI 上挂掉的原因。
+    所以这里直接替换 `os.environ` 对象，**在任意平台上模拟 Linux 语义**。
+
+    返回一个普通 dict（区分大小写），测试往里塞键即可。
+    """
+    import app.utils.netcheck as nc
+
+    fake_env: dict[str, str] = {}
+    monkeypatch.setattr(nc.os, "environ", fake_env)
+    return fake_env
+
+
 class TestDetectProxies:
     """代理检测必须覆盖大小写两种写法，且**对同一个变量去重**。
 
-    ⚠️ Windows 上 `os.environ` 大小写不敏感 —— `HTTP_PROXY` 和 `http_proxy`
-    是同一个变量。所以「同时设大小写两个不同值」在这个平台上不可能发生，
-    但检测函数**必须表现得一致**（否则界面上会把一个代理报成好几条）。
+    ⚠️ 这里有一个**真实踩过的 CI 坑**（本地绿、Linux CI 红）：
+
+        Windows 上 `os.environ` 大小写**不敏感** —— `HTTP_PROXY` 和 `http_proxy`
+        是同一个变量，所以「只查大写名」在 Windows 上也能误打误撞查到大写写入的值；
+        但 Linux 严格区分大小写，只设了 `https_proxy`（小写）时，
+        `os.environ.get("HTTPS_PROXY")` 返回 `None` → **代理被完全漏检**。
+
+    所以本组测试**不能依赖宿主平台的 `os.environ` 语义**来断言，
+    必须显式构造「区分大小写」的环境来验证检测逻辑本身。
     """
 
     def test_none_when_clean(self, clean_proxy_env):
@@ -56,10 +79,31 @@ class TestDetectProxies:
         assert detect_proxies() == {"HTTPS_PROXY": "http://127.0.0.1:9999"}
 
     def test_detects_lowercase(self, clean_proxy_env):
+        """只设小写变量也必须能被检测到（Linux 上曾经漏检 → CI 挂）。"""
         clean_proxy_env.setenv("https_proxy", "http://127.0.0.1:9999")
         found = detect_proxies()
         assert list(found.values()) == ["http://127.0.0.1:9999"]
         assert list(found)[0].lower() == "https_proxy", "应保留用户实际使用的变量名"
+
+    def test_lowercase_detected_under_case_sensitive_semantics(
+        self, case_sensitive_proxy_env
+    ):
+        """⭐ 回归测试：**在区分大小写的环境下**（Linux 语义）小写代理不得漏检。
+
+        这条测试在**任何平台**都用「区分大小写的 dict」跑，
+        因此 Windows 本机也能拦住这个「CI 才暴露」的 bug。
+        """
+        case_sensitive_proxy_env["https_proxy"] = "http://127.0.0.1:9999"
+        found = detect_proxies()
+        assert list(found.values()) == ["http://127.0.0.1:9999"], (
+            f"区分大小写的环境下漏检了小写代理：{found}"
+        )
+
+    def test_uppercase_detected_under_case_sensitive_semantics(
+        self, case_sensitive_proxy_env
+    ):
+        case_sensitive_proxy_env["HTTP_PROXY"] = "http://a:1"
+        assert detect_proxies() == {"HTTP_PROXY": "http://a:1"}
 
     def test_single_variable_is_reported_once(self, clean_proxy_env):
         """同一个变量（大小写视为一个）只应报出一次。"""
@@ -74,6 +118,20 @@ class TestDetectProxies:
         found = detect_proxies()
         assert len(found) == 2
         assert set(found.values()) == {"http://a:1", "http://b:2"}
+
+    def test_case_duplicates_are_deduped_under_case_sensitive_semantics(
+        self, case_sensitive_proxy_env
+    ):
+        """Linux 上若真被写了大小写两份，只报一份即可（避免比配置本身更让人困惑）。"""
+        case_sensitive_proxy_env["HTTP_PROXY"] = "http://a:1"
+        case_sensitive_proxy_env["http_proxy"] = "http://a:1"
+        found = detect_proxies()
+        assert len(found) == 1, f"大小写重复未去重：{found}"
+
+    def test_unrelated_env_is_ignored(self, case_sensitive_proxy_env):
+        case_sensitive_proxy_env["SOMETHING_PROXY_LIKE"] = "http://x:1"
+        case_sensitive_proxy_env["NOT_A_PROXY"] = "1"
+        assert detect_proxies() == {}
 
 
 class TestDiagnoseOffline:
